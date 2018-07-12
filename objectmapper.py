@@ -25,7 +25,17 @@ def map_object(target_object: T, value_dictionary: dict) -> None:
     for attribute_name, current_attribute_value in target_object.__dict__.items():
         if attribute_name in value_dictionary:
             if current_attribute_value is not None:
-                new_value = current_attribute_value.__class__(value_dictionary[attribute_name])
+                new_value = convert(value_dictionary[attribute_name], current_attribute_value.__class__)
             else:
                 new_value = value_dictionary[attribute_name]
             target_object.__setattr__(attribute_name, new_value)
+
+
+def convert(s: str, target_type: type) -> object:
+    result = None
+    if s is not None:
+        if target_type == bool:
+            result = s.upper() in ('1', 'TRUE', 'YES', 'Y')
+        else:
+            result = target_type(s)
+    return result
