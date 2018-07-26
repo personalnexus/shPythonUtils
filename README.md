@@ -1,2 +1,2 @@
 # shPythonUtils
-Collection of Python utilities
+Collection of Python utilities and experiments
