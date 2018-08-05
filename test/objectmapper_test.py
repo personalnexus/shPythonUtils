@@ -29,6 +29,23 @@ class MapperTest(unittest.TestCase):
         map_object(mapped_object, {'value1': '12'})
         self.assertIsTypedValue('12', mapped_object.value1)
 
+    def test_map_object_with_type_detection(self):
+        mapped_object = MyMappedObject2()
+        map_object(mapped_object, {'iValue1': '12'})
+        self.assertIsTypedValue(12, mapped_object.value1)
+
+    def test_type_detection(self):
+        self.assertTypeDetection('theDate', 'dtTheDate', datetime.datetime)
+        self.assertTypeDetection('anInteger', 'iAnInteger', int)
+        self.assertTypeDetection('myString', 'sMyString', str)
+        self.assertTypeDetection('somethingTrue', 'bSomethingTrue', bool)
+        self.assertTypeDetection('s', None, None)
+        self.assertTypeDetection('', None, None)
+        self.assertTypeDetection(None, None, None)
+
+    def assertTypeDetection(self, attribute_name, key, target_type):
+        self.assertTupleEqual((target_type, key), detect_type(attribute_name, {key: None}))
+
     def assertIsTypedValue(self, expected_value, actual_value):
         self.assertEqual(expected_value, actual_value)
         self.assertIsInstance(actual_value, type(expected_value))
